@@ -3,30 +3,53 @@ import Person from './components/Person'
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas' , number: '040-1234567'}
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
-  const names = () => persons.map((p) =>
-      <Person key={p.name} name={p.name}/>
+
+  const personRows = () => persons.map((p) =>
+      <Person key={p.name} name={p.name} number={p.number}/>
     )
 
-  const checkIfExists = (name) => {
+  
+  const checkIfNameExists = (name) => {
       const check = persons.some(el => el.name === name)
-      console.log(check)
       return check
+  }
+
+  const checkForUpdate = (name,number) => {
+    const check = persons.some(el => el.name === name & el.number === number)
+    console.log(check)
+    return check
   }
   const addName = (e) => {
     e.preventDefault()
-    if(checkIfExists(newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+    if(checkIfNameExists(newName)) {
+      
+      if(!checkForUpdate(newName,newNumber)){
+        const confirm = window.confirm(`Replace ${newName}'s old number with a new one?`);
+        if(confirm) {
+            const arr = [...persons]
+            arr.find(p => p.name === newName).number = newNumber
+            setPersons(arr)
+            setNewName('')
+            setNewNumber('')
+        }
+      }
+      else {
+          window.alert(`${newName} is already added to phonebook with the same number`)
+      }
     }else{
-      const nameObject = {
-        name: newName
+      const personObject = {
+        name: newName,
+        number: newNumber
       }
       
-      setPersons(persons.concat(nameObject))
+      setPersons(persons.concat(personObject))
       setNewName('')
+      setNewNumber('')
     }
     
   }
@@ -35,6 +58,12 @@ const App = () => {
     setNewName(e.target.value)
     //console.log(newName)
   }
+
+  const handleNumberChange = (e) => {
+    setNewNumber(e.target.value)
+    //console.log(newName)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -43,12 +72,15 @@ const App = () => {
           name: <input value={newName} onChange={handleNameChange}/>
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNumberChange}/>
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
         <ul>
-          {names()}
+          {personRows()}
         </ul>
     </div>
   )
