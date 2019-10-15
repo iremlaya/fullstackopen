@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Header = ({ name }) => {
+const Header = (props) => {
   return (
-    <h1>{name}</h1>
+    <h1>{props.course}</h1>
   )
 }
 const Content = ({ parts }) => {
@@ -15,11 +15,11 @@ const Content = ({ parts }) => {
     </div>
   )
 }
-const Total = ({ props }) => {
+const Total = ({ parts }) => {
 
 
   return (
-    <p>Number of exercises {parts.reduce((a, b) => a + (b['exercises'] || 0), 0)}</p>
+    <h3>Total # of exercises {parts.reduce((a, b) => a + (b['exercises'] || 0), 0)}</h3>
   )
 }
 const Part = ({ index, name, exercises }) => {
@@ -28,6 +28,7 @@ const Part = ({ index, name, exercises }) => {
   )
 }
 const Course = ({ course }) => {
+  console.log(course.name)
   return (
     <div>
       <Header course={course.name} />
