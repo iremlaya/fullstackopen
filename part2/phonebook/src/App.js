@@ -11,13 +11,24 @@ const App = () => {
       <Person key={p.name} name={p.name}/>
     )
 
+  const checkIfExists = (name) => {
+      const check = persons.some(el => el.name === name)
+      console.log(check)
+      return check
+  }
   const addName = (e) => {
     e.preventDefault()
-    const nameObject = {
-      name: newName
+    if(checkIfExists(newName)) {
+      window.alert(`${newName} is already added to phonebook`)
+    }else{
+      const nameObject = {
+        name: newName
+      }
+      
+      setPersons(persons.concat(nameObject))
+      setNewName('')
     }
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+    
   }
 
   const handleNameChange = (e) => {
