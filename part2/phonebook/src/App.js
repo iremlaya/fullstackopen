@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Person from './components/Person'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Persons = (props) => {
   const filteredPersons = props.filteredPersons();
@@ -45,15 +45,11 @@ const App = () => {
   const [ show, setShow ] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-  
-    const eventHandler = response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    }
-  
-    const promise = axios.get('http://localhost:3001/persons')
-    promise.then(eventHandler)
+   personService
+      .getAll()
+      .then(res => {
+        setPersons(res.data)
+      })
   }, [])
 
 
@@ -83,9 +79,16 @@ const App = () => {
       if(!checkForUpdate(newName,newNumber)){
         const confirm = window.confirm(`Replace ${newName}'s old number with a new one?`);
         if(confirm) {
-            const arr = [...persons]
-            arr.find(p => p.name === newName).number = newNumber
-            setPersons(arr)
+            
+            const personTemp = persons.find(p => p.name === newName)
+            const changed = {...personTemp, number: newNumber}
+            const id = personTemp.id
+            personService
+              .update(id, changed)
+              .then(response => {
+                setPersons(persons.map(p => p.id !== id ? p : response.data))
+              })
+            
             setNewName('')
             setNewNumber('')
         }
@@ -98,10 +101,15 @@ const App = () => {
         name: newName,
         number: newNumber
       }
+      personService
+      .create(personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
+
       
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
     }
     
   }
