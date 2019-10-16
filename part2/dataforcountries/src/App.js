@@ -14,7 +14,8 @@ const Country = ({country}) => {
         {languages.map(l => <li key={l.name}>{l.name}</li>)}
       </ul>
 
-      <img src={flag}/>
+      <img style={{width:200}} src={flag}/>
+      <Weather capital={capital}/>
     </div>
     
   )
@@ -24,15 +25,13 @@ const Country = ({country}) => {
 
 
 const Countries = ({ countries, inputValue }) => {
-  console.log(inputValue)
-  console.log("in countries")
+  
   const [show, setShow] = useState(false)
   const [showCountry, setShowCountry] = useState('')
   const [initialInput, setInitialInput] = useState('')
 
   useEffect(
       ()=>{
-        console.log("hey")
         if(inputValue != initialInput){
           setShow(false)
           setShowCountry('')
@@ -41,8 +40,7 @@ const Countries = ({ countries, inputValue }) => {
   , [countries])
 
   const showCountryFunc = (country) => {
-    console.log( inputValue )
-    console.log(  "is input value in show country func.")
+    
     setInitialInput(inputValue)
     setShow(true)
     setShowCountry(country)
@@ -71,6 +69,42 @@ const Countries = ({ countries, inputValue }) => {
       )}
   </ul>
 }
+
+const Weather = ({ capital }) => {
+  const [weather, setWeather] = useState({})
+  //if error occurs such as unhandled rejection; its bc allowed request quota is reached.
+  axios.get(`http://api.weatherstack.com/current?access_key=2d5493aba6e0c2185ca5a132dd1f48c9&query=${capital}`)
+    .then((response => {
+      const { temperature, weather_icons, wind_speed, wind_dir } = response.data.current;
+      const weather = {
+        temperature,
+        weather_icons,
+        wind_speed,
+        wind_dir
+      }
+      setWeather(weather);
+    }))
+
+    
+    return (
+      <div>
+        {
+          weather && weather.temperature ?
+            <div>
+              <h2>Weather in {capital}</h2> 
+
+              <p><b>temperature:</b>{weather.temperature} celsius</p>
+
+              <img style={{width:100}} source={weather.weather_icons[0]} />
+
+              <p><b>wind:</b>{weather.wind_speed} kph direction {weather.wind_dir}</p>
+              
+            </div> :
+            <p>Loading...</p>
+        }
+      </div>
+    )
+  }
 
 function App() {
   const [countries, setCountries] = useState([])
