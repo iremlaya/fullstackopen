@@ -77,7 +77,7 @@ const App = () => {
   const addName = (e) => {
     e.preventDefault()
     if(checkIfNameExists(newName)) {
-      
+      //part2.19
       if(!checkForUpdate(newName,newNumber)){
         const confirm = window.confirm(`Replace ${newName}'s old number with a new one?`);
         if(confirm) {
