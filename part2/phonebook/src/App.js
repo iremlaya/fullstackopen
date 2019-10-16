@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react'
 import Person from './components/Person'
 import personService from './services/persons'
 
-const Persons = (props) => {
-  const filteredPersons = props.filteredPersons();
 
+const Persons = (props) => {
+
+  const filteredPersons = props.filteredPersons();
+  console.log(filteredPersons)
   return <ul>
       {filteredPersons.map((p) =>
-  <Person key={p.name} name={p.name} number={p.number}
-  />)}
-  </ul>
+    <Person key={p.id} person={p}  deleteButton={props.deleteButton}/>)}
+    </ul>
 }
+
 
 const Filter = (props) => {
     
@@ -126,7 +128,15 @@ const App = () => {
   const handleShow = (e) => {
       setShow(e.target.value)
   }
-
+  const deleteButton = (props) => {
+    
+    const check = window.confirm(`Do you really want to delete ${props.name}?`);
+    if (check) {
+      personService.remove(props.id).then(() => {
+        setPersons(persons.filter(p => p.id !== props.id))
+      })
+    } 
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -140,7 +150,7 @@ const App = () => {
       handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-        <Persons filteredPersons={notesToShow}/>
+        <Persons deleteButton={deleteButton} filteredPersons={notesToShow}/>
     </div>
   )
 }
