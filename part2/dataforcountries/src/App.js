@@ -20,7 +20,36 @@ const Country = ({country}) => {
   )
   return data
 }
-const Countries = ({ countries }) => {
+
+
+
+const Countries = ({ countries, inputValue }) => {
+  console.log(inputValue)
+  console.log("in countries")
+  const [show, setShow] = useState(false)
+  const [showCountry, setShowCountry] = useState('')
+  const [initialInput, setInitialInput] = useState('')
+
+  useEffect(
+      ()=>{
+        console.log("hey")
+        if(inputValue != initialInput){
+          setShow(false)
+          setShowCountry('')
+        }
+      }
+  , [countries])
+
+  const showCountryFunc = (country) => {
+    console.log( inputValue )
+    console.log(  "is input value in show country func.")
+    setInitialInput(inputValue)
+    setShow(true)
+    setShowCountry(country)
+  }
+  if(show) {
+    return <Country country={showCountry}/>
+  }
   if (countries === null) {
     return <p>No such country.</p>
   }
@@ -35,13 +64,19 @@ const Countries = ({ countries }) => {
   }
   return <ul>
     {countries.map((c) =>
-      <p key={c.name}> {c.name} </p>)}
+      <div key={c.name}>
+        <p > {c.name} </p>
+        <button onClick={() => {showCountryFunc(c)}}>show</button>
+      </div>
+      )}
   </ul>
 }
 
 function App() {
   const [countries, setCountries] = useState([])
   const [countryName, setCountryName] = useState('')
+
+
   useEffect(() => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
@@ -51,12 +86,12 @@ function App() {
   }, [])
 
   const handleInputChange = (e) => {
+
     setCountryName(e.target.value)
   }
 
   const countriesToShow = () => {
     if (countryName === '') {
-      console.log("empty array")
       return []
     }
     const a = countries.filter(c => c.name.toLowerCase().includes(countryName.toLowerCase()))
@@ -65,12 +100,17 @@ function App() {
     
 
   }
+  const inputForCountries = () => {
+    
+    return countryName
+  }
   return (
     <div>
+      
       <div>
         find countries <input value={countryName} onChange={handleInputChange} />
       </div>
-      <Countries countries={countriesToShow()} />
+       <Countries inputValue={inputForCountries()} countries={countriesToShow()} />
     </div>
   );
 }
