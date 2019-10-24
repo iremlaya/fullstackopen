@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
-
+app.use(morgan('tiny'))
 let persons = [
     {
       "name": "Arto Hellas",
@@ -74,6 +75,12 @@ app.post('api/people', (req,res) => {
     persons = persons.concat(person)
     res.json(person)
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+  app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
