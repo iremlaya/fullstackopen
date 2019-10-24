@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -25,12 +27,52 @@ let persons = [
     }
   ]
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+app.get('/info', (req, res) => {
+  res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
 })
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(p => p.id === id)
+    if (person) {
+        res.json(person)
+    }else{
+        res.status(404).end()
+    }
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.filter(p => p.id !== id)
+
+    res.status(204).end()
+})
+
+app.post('api/people', (req,res) => {
+    const random = Math.floor(Math.random() * Math.floor(10000))
+    const person = req.body
+
+    if (!body.name) {
+        return res.status(400).json({
+          error: 'name missing'
+        })
+      } else if (!body.number) {
+        return res.status(400).json({
+          error: 'number missing'
+        })
+      } else if (persons.find(p => p.name === body.name)) {
+        return res.status(400).json({
+          error: 'person already exists'
+        })
+      }
+
+    person.id = random
+    persons = persons.concat(person)
+    res.json(person)
 })
 
 const PORT = 3001
