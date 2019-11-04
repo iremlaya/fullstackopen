@@ -41,7 +41,7 @@ app.get('/api/persons/:id', (req, res) => {
     const person = persons.find(p => p.id === id)
     if (person) {
         res.json(person)
-    }else{
+    }else{  
         res.status(404).end()
     }
 })
@@ -53,7 +53,7 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-app.post('api/people', (req,res) => {
+app.post('api/persons', (req,res) => {
     const random = Math.floor(Math.random() * Math.floor(10000))
     const person = req.body
 
