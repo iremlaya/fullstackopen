@@ -98,7 +98,7 @@ app.delete('/api/persons/:id', (req, res) => {
     res.json(p.toJSON())
     persons = persons.filter(p => p.id !== id)
   })
-  res.status(204).end()
+  
 })
 
 
