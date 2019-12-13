@@ -67,16 +67,14 @@ app.post('/api/persons', (req, res) => {
     name: body.name,
     number: body.number
   })
-  person.save().then((err, n) => {
-    if (err) {
-      return res.status(404).send(err);
-    }
+  person.save().then(n => {
     let print = `added ${body.name} with number ${body.number} to phonebook`
     console.log(print)
     res.json(n.toJSON())
   }).catch(e => {
     console.log("im error: ")
     console.log(e)
+    return res.status(404).send(e);
   })
 })
 
