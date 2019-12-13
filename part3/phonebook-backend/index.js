@@ -18,24 +18,24 @@ app.use(cors())
 
 let persons = [
   {
-    "name": "Arto Hellas",
-    "number": "123456",
-    "id": 1
+    'name': 'Arto Hellas',
+    'number': '123456',
+    'id': 1
   },
   {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
+    'name': 'Ada Lovelace',
+    'number': '39-44-5323523',
+    'id': 2
   },
   {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
+    'name': 'Dan Abramov',
+    'number': '12-43-234345',
+    'id': 3
   },
   {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
+    'name': 'Mary Poppendieck',
+    'number': '39-23-6423122',
+    'id': 4
   }
 ]
 
@@ -54,7 +54,7 @@ app.post('/api/persons', (req, res) => {
       error: 'name missing',
       bod: body
     })
-  } else if (body.number  === undefined) {
+  } else if (body.number === undefined) {
     return res.status(400).json({
       error: 'number missing'
     })
@@ -74,9 +74,9 @@ app.post('/api/persons', (req, res) => {
     console.log(print)
     res.json(n.toJSON())
   }).catch(e => {
-    console.log("im error: ")
+    console.log('im error: ')
     console.log(e)
-    return res.status(404).send(e);
+    return res.status(404).send(e)
   })
 })
 
@@ -92,20 +92,17 @@ app.get('/api/persons/:id', (req, res, next) => {
     if (p) {
       res.json(p.toJSON())
     } else {
-      response.status(404).end()
+      res.status(404).end()
     }
-   
   }).catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
-  
   Person.findByIdAndDelete(req.params.id).then(p => {
     res.json(p.toJSON())
     persons = persons.filter(p => p.id !== id)
   })
-  
 })
 
 
@@ -129,6 +126,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
