@@ -1,0 +1,6 @@
+post http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+"title": "title", "author": "irem", "url": "3001.com", "likes": "14"
+}
