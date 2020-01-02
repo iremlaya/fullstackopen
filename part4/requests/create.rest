@@ -1,6 +1,8 @@
 post http://localhost:3001/api/blogs
 content-type: application/json
 
-{
-"title": "title", "author": "irem", "url": "3001.com", "likes": "14"
-}
+
+{       "title": "Type wars",
+        "author": "Robert C. Martin",
+        "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        "likes": 2  }
