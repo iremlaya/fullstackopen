@@ -71,21 +71,21 @@ beforeEach(async () => {
 
 test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
-  
+
     expect(response.body.length).toBe(3)
-  })
-  
-  test('a specific title is within the returned blogs', async () => {
+})
+
+test('a specific title is within the returned blogs', async () => {
     const response = await api.get('/api/blogs')
-  
+
     const contents = response.body.map(r => r.content)
     //console.log(contents) returns undefined??
-    
-  
+
+
     expect(contents).toContain(
-      'React patterns'
+        'React patterns'
     )
-  })
+})
 test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')
@@ -121,11 +121,34 @@ test('a blog can be added', async () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-    
+
     const responseAfter = await api.get('/api/blogs')
-    expect(responseAfter.body.length).toBe(responseInitial.body.length +1)
-    
+    expect(responseAfter.body.length).toBe(responseInitial.body.length + 1)
+
 })
+
+
+describe('deletion of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+        const blogsAtStart = await api.get('/api/blogs')
+        const blogToDelete = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogsAtEnd = await api.get('/api/blogs')
+
+        expect(blogsAtEnd.length).toBe(
+            blogsAtStart.length - 1
+        )
+
+        const contents = blogsAtEnd.map(r => r.content)
+
+        expect(contents).not.toContain(blogToDelete.content)
+    })
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
