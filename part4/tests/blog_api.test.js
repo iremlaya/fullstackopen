@@ -78,11 +78,12 @@ test('all blogs are returned', async () => {
 test('a specific title is within the returned blogs', async () => {
     const response = await api.get('/api/blogs')
 
-    const contents = response.body.map(r => r.content)
+    const contents = response.body.map(r => r.title)
     //console.log(contents) returns undefined??
 
 
     expect(contents).toContain(
+
         'React patterns'
     )
 })
@@ -101,7 +102,7 @@ test('there is one blog', async () => {
 test('the first blog is about React patterns', async () => {
     const response = await api.get('/api/blogs')
 
-    expect(response.body[0].content).toBe('React patterns')
+    expect(response.body[0].title).toBe('React patterns')
 })
 
 test('a blog can be added', async () => {
@@ -143,9 +144,9 @@ describe('deletion of a blog', () => {
             blogsAtStart.length - 1
         )
 
-        const contents = blogsAtEnd.map(r => r.content)
+        const contents = blogsAtEnd.map(r => r.title)
 
-        expect(contents).not.toContain(blogToDelete.content)
+        expect(contents).not.toContain(blogToDelete.title)
     })
 })
 
