@@ -21,14 +21,15 @@ notesRouter.get('/:id', (request, response, next) => {
 })
 */
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async(request, response, next) => {
     const blog = new Blog(request.body)
-
-    blog
-        .save()
-        .then(result => {
-            response.status(201).json(result)
-        })
+    try {
+        const saved = await blog.save()
+        response.json(saved.toJSON())
+    } catch (e) {
+        next(e)
+    }
+   
 })
 
 /*
